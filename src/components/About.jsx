@@ -1,186 +1,163 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-// Reuse our hero assets for the dual-identity mask effect prototype
-import imgSpiderman from '../assets/spiderman/20260407_055437.png';
-import imgMan from '../assets/man/1775519899126.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
   const sectionRef = useRef(null);
   const textContainerRef = useRef(null);
-  const imageContainerRef = useRef(null);
-  const maskRef = useRef(null);
-  
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const statsRef = useRef(null);
 
-  // 1. ScrollTrigger entrance animation
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Create a timeline bound to the scroll position
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 75%", // triggers when the top of the section hits 75% of the viewport height
-          toggleActions: "play none none reverse" // play forwards on scroll down, reverse on scroll out
+          start: "top 75%",
+          toggleActions: "play none none reverse"
         }
       });
 
-      // Select all text lines that have the 'stagger-reveal' class
       const textElements = textContainerRef.current.querySelectorAll('.stagger-reveal');
-      
-      // Select the image container
-      const imgElement = imageContainerRef.current;
 
-      tl.fromTo(imgElement, 
-        { opacity: 0, x: -50 }, 
-        { opacity: 1, x: 0, duration: 1.2, ease: "power3.out" }
-      )
-      .fromTo(textElements, 
+      tl.fromTo(textElements,
         { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: "power3.out" },
-        "-=0.8" // start before image is fully in
+        { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: "power3.out" }
       );
-      
+
+      if (statsRef.current) {
+        tl.fromTo(statsRef.current.children,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power3.out" },
+          "-=0.5"
+        );
+      }
     }, sectionRef);
 
-    return () => ctx.revert(); // clean up ScrollTrigger
+    return () => ctx.revert();
   }, []);
 
-  // 2. Interactive Spotlight Mask
-  const handleMouseMove = (e) => {
-    if (!imageContainerRef.current) return;
-    
-    // Get mouse position relative to the image container
-    const rect = imageContainerRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    
-    // Use GSAP to smoothly lerp the mask center
-    gsap.to(maskRef.current, {
-      '--x': `${x}%`,
-      '--y': `${y}%`,
-      duration: 0.4,
-      ease: 'power2.out'
-    });
-  };
-
-  const handleMouseLeave = () => {
-    // Return to default center position smoothly
-    gsap.to(maskRef.current, {
-      '--x': '50%',
-      '--y': '50%',
-      duration: 0.8,
-      ease: 'power3.out'
-    });
-  };
+  const stats = [
+    { value: '150+', label: 'LeetCode Problems' },
+    { value: '3rd', label: 'Year B.Tech CSE' },
+    { value: '5+', label: 'Projects Shipped' },
+    { value: '2027', label: 'Graduation' },
+  ];
 
   return (
-    <section 
-    id='about'
-      ref={sectionRef} 
+    <section
+      id="about"
+      ref={sectionRef}
       className="relative w-full min-h-screen bg-black flex items-center justify-center py-24 px-6 md:px-12 lg:px-24 overflow-hidden"
     >
-      {/* Background Ambience Layer */}
+      {/* Background ambience */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-900/10 blur-[120px] rounded-full mix-blend-screen" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiIvPjwvc3ZnPg==')] opacity-30 mix-blend-overlay" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-900/10 blur-[120px] rounded-full" />
       </div>
 
-      <div className="max-w-[90rem] w-full grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center relative z-10">
-        
-        {/* Left Column: Interactive Portrait */}
-        <div 
-          ref={imageContainerRef}
-          className="relative w-full aspect-[4/5] max-w-md mx-auto lg:max-w-none rounded-2xl overflow-hidden cursor-crosshair group shadow-2xl border border-white/5"
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          style={{ transform: 'translateZ(0)' }} // Hardware acceleration
-        >
-          {/* Base Layer: Developer Portrait (Moody/Dark) */}
-          <img 
-            src={imgMan} 
-            alt="Developer Persona" 
-            className="absolute inset-0 w-full h-full object-cover object-center grayscale opacity-60 mix-blend-luminosity brightness-75 transition-all duration-700 group-hover:scale-105"
-          />
+      <div className="max-w-[90rem] w-full relative z-10">
+        <div ref={textContainerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
-          {/* Masked Overlay: Superhero Persona (Vibrant) */}
-          <div 
-            ref={maskRef}
-            className="absolute inset-0 w-full h-full"
-            style={{
-              '--x': '50%',
-              '--y': '50%',
-              // The polygon logic simulates a circular spotlight reveal
-              // For a soft glowing edge, clip-path doesn't support blur inherently, but this acts perfectly as the mask.
-              clipPath: 'circle(15% at var(--x) var(--y))',
-              transition: 'clip-path 0.1s ease-out'
-            }}
-          >
-            <img 
-              src={imgSpiderman} 
-              alt="Hidden Superhero Persona" 
-              className="absolute inset-0 w-full h-full object-cover object-center scale-105 group-hover:scale-110 transition-transform duration-[2s] ease-out"
-            />
-            
-            {/* Inner spotlight glow matched inside the mask */}
-            <div className="absolute inset-0 bg-gradient-radial from-transparent via-black/20 to-black/80" />
-          </div>
+          {/* Left: Story */}
+          <div className="flex flex-col space-y-8">
 
-          {/* Interaction Hint Overlay */}
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-             <div className="w-24 h-24 rounded-full border border-white/20 scale-150 animate-ping absolute" />
-          </div>
-        </div>
+            <div>
+              <p className="stagger-reveal text-red-500 font-mono text-sm tracking-[0.3em] uppercase font-bold mb-4">
+                [ About Me ]
+              </p>
+              <h2 className="stagger-reveal text-5xl md:text-6xl font-bold tracking-tighter text-white font-sans leading-tight">
+                Builder by<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-purple-500 font-serif italic pr-4">
+                  Nature
+                </span>
+              </h2>
+            </div>
 
-        {/* Right Column: Story & Details */}
-        <div ref={textContainerRef} className="flex flex-col justify-center space-y-10">
-          
-          <div className="overflow-hidden">
-            <h2 className="stagger-reveal text-5xl md:text-6xl font-bold tracking-tighter text-white font-sans leading-tight">
-              The Dual <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500 font-serif italic pr-4">Persona</span>
-            </h2>
-          </div>
-
-          <div className="overflow-hidden">
-            <p className="stagger-reveal text-lg md:text-xl text-gray-400 font-light leading-relaxed max-w-xl">
-              There are two sides to every great digital experience. The relentless logic of the backend, and the striking, emotional pull of the frontend. As a Full-Stack Developer, my superpower lies in bridging that gap—masking complex, high-performance web architecture behind beautiful, fluid, and fiercely creative user interfaces.
+            <p className="stagger-reveal text-lg text-gray-400 font-light leading-relaxed">
+              I'm Om Mahato, a third-year Computer Science student at Narula Institute of Technology, Kolkata. I'm passionate about building real products — not just side projects. From full-stack e-commerce platforms to AI-powered mock interview tools, I ship things that work.
             </p>
-          </div>
 
-          {/* Expertise Highlights */}
-          <div className="overflow-hidden">
-            <div className="stagger-reveal grid grid-cols-2 gap-x-8 gap-y-4 pt-4 border-t border-white/10 max-w-xl">
+            <p className="stagger-reveal text-lg text-gray-400 font-light leading-relaxed">
+              My current focus is landing a paid internship at a funded startup, while building PeerPrep — an AI-powered mock interview platform using Next.js, Socket.io, and the Anthropic API.
+            </p>
+
+            <div className="stagger-reveal flex flex-wrap gap-3 pt-2">
               {[
-                "Full-Stack Fluidity", 
-                "Motion & Micro-Interactions", 
-                "System Architecture", 
-                "Pixel-Perfect UIs"
-              ].map((skill, i) => (
-                <div key={i} className="flex items-center space-x-3 group">
-                  <div className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-red-500 transition-colors duration-300" />
-                  <span className="text-gray-300 text-sm md:text-base font-medium tracking-wide uppercase group-hover:text-white transition-colors duration-300">
-                    {skill}
-                  </span>
+                'Problem Solver',
+                'Fast Learner',
+                'Open Source Enthusiast',
+                'GSoC 2027 Aspirant'
+              ].map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs uppercase tracking-widest px-4 py-2 border border-white/10 rounded-full text-gray-400 font-medium hover:border-red-500/50 hover:text-white transition-all duration-300"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Education */}
+            <div className="stagger-reveal border-l-2 border-red-500/50 pl-6 py-2 space-y-1">
+              <p className="text-white font-semibold text-lg">Narula Institute of Technology</p>
+              <p className="text-gray-400 text-sm">B.Tech in Computer Science Engineering</p>
+              <p className="text-gray-500 text-xs uppercase tracking-widest">Kolkata, India · 2022 – 2026</p>
+            </div>
+
+            {/* Certifications */}
+            <div className="stagger-reveal space-y-3">
+              <p className="text-xs uppercase tracking-widest text-gray-500 font-semibold mb-3">Certifications</p>
+              {[
+                'NPTEL — Programming in Java',
+                'BCT Training — Data Analytics with Python',
+                'EduSkills / NASSCOM FutureSkills — AI (In Progress)',
+              ].map((cert) => (
+                <div key={cert} className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />
+                  <span className="text-gray-300 text-sm">{cert}</span>
                 </div>
               ))}
             </div>
+
           </div>
 
-          {/* Quote Block */}
-          <div className="overflow-hidden mt-6">
-            <blockquote className="stagger-reveal border-l-2 border-red-500/50 pl-6 py-2">
-              <p className="text-xl md:text-2xl text-gray-200 font-serif italic">
-                “Logic builds the foundation. <br /> Imagination breaks the boundaries.”
-              </p>
-            </blockquote>
+          {/* Right: Stats */}
+          <div className="flex flex-col gap-8">
+
+            <div ref={statsRef} className="grid grid-cols-2 gap-6">
+              {stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="border border-white/10 rounded-2xl p-6 hover:border-red-500/30 transition-all duration-300 group cursor-default"
+                >
+                  <p className="text-4xl font-bold text-white group-hover:text-red-400 transition-colors duration-300">
+                    {stat.value}
+                  </p>
+                  <p className="text-sm text-gray-500 uppercase tracking-widest mt-2">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Hackathons */}
+            <div className="stagger-reveal space-y-3">
+              <p className="text-xs uppercase tracking-widest text-gray-500 font-semibold mb-3">Hackathons</p>
+              {[
+                { name: 'Hack-o-NIT 2026', result: 'Participant' },
+                { name: 'InnovateX 2026', result: 'Participant' },
+              ].map((hack) => (
+                <div key={hack.name} className="flex items-center justify-between border border-white/5 rounded-xl px-5 py-3 hover:border-white/20 transition-all duration-300">
+                  <span className="text-gray-300 text-sm font-medium">{hack.name}</span>
+                  <span className="text-xs text-gray-500 uppercase tracking-widest">{hack.result}</span>
+                </div>
+              ))}
+            </div>
+
           </div>
-          
+
         </div>
-
       </div>
     </section>
   );
