@@ -39,10 +39,10 @@ export default function About() {
   }, []);
 
   const stats = [
-    { value: '150+', label: 'LeetCode Problems' },
-    { value: '3rd', label: 'Year B.Tech CSE' },
+    { value: '250+', label: 'LeetCode Problems' },
+    { value: '3rd', label: 'Year B.Tech IT' },
     { value: '5+', label: 'Projects Shipped' },
-    { value: '2027', label: 'Graduation' },
+    { value: '2028', label: 'Graduation' },
   ];
 
   return (
@@ -75,7 +75,7 @@ export default function About() {
             </div>
 
             <p className="stagger-reveal text-lg text-gray-400 font-light leading-relaxed">
-              I'm Om Mahato, a third-year Computer Science student at Narula Institute of Technology, Kolkata. I'm passionate about building real products — not just side projects. From full-stack e-commerce platforms to AI-powered mock interview tools, I ship things that work.
+              I'm Om Kumar, a third-year Information Technology student at Narula Institute of Technology, Kolkata. I'm passionate about building real products — not just side projects. From full-stack e-commerce platforms to AI-powered mock interview tools, I ship things that work.
             </p>
 
             <p className="stagger-reveal text-lg text-gray-400 font-light leading-relaxed">
@@ -101,8 +101,8 @@ export default function About() {
             {/* Education */}
             <div className="stagger-reveal border-l-2 border-red-500/50 pl-6 py-2 space-y-1">
               <p className="text-white font-semibold text-lg">Narula Institute of Technology</p>
-              <p className="text-gray-400 text-sm">B.Tech in Computer Science Engineering</p>
-              <p className="text-gray-500 text-xs uppercase tracking-widest">Kolkata, India · 2022 – 2026</p>
+              <p className="text-gray-400 text-sm">B.Tech in Information Technology</p>
+              <p className="text-gray-500 text-xs uppercase tracking-widest">Kolkata, India · 2024 – 2028</p>
             </div>
 
             {/* Certifications */}

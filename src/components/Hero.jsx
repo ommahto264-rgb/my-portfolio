@@ -76,11 +76,11 @@ export default function Hero() {
             <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter leading-[1.05] font-sans text-white">
               Hi, I'm<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-purple-400 to-blue-400 font-serif italic pr-4">
-                Om Mahato
+                Om Kumar
               </span>
             </h1>
             <p className="mt-6 text-gray-400 text-lg font-light tracking-wide">
-              B.Tech CSE · Narula Institute of Technology, Kolkata
+              B.Tech IT · Narula Institute of Technology, Kolkata
             </p>
           </div>
 

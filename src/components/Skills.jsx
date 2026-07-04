@@ -191,7 +191,7 @@ export default function Skills() {
           </div>
           <div className="flex items-center gap-8 flex-shrink-0">
             <div className="text-center">
-              <p className="text-3xl font-bold text-white">150+</p>
+              <p className="text-3xl font-bold text-white">250+</p>
               <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">Problems Solved</p>
             </div>
             <div className="text-center">
